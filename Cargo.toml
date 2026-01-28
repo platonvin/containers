@@ -1,0 +1,12 @@
+[package]
+name = "containers"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[lib]
+name = "containers"
+path = "src/lib.rs"
+
+[dependencies]
+qvek = { path = "../qvek/qvek", default-features = false }
