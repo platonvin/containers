@@ -19,6 +19,22 @@ pub struct DArray2D<T> {
     pub y_size: usize,
 }
 
+impl<T: Clone> DArray2D<T> {
+    pub fn copy_to(&self, other: &mut Self) {
+        if self.x_size != other.x_size || self.y_size != other.y_size {
+            // Dimensions mismatch: we must reallocate
+            *other = self.clone();
+        } else {
+            // Dimensions match: reuse the boxed slice memory
+            // slice::clone_from_slice only works if T: Copy.
+            // For T: Clone, we use a loop or zip to reuse existing elements.
+            for (src, dst) in self.data.iter().zip(other.data.iter_mut()) {
+                dst.clone_from(src);
+            }
+        }
+    }
+}
+
 impl<T> DArray2D<T> {
     pub fn new_filled_by_generator(
         x_size: usize,
