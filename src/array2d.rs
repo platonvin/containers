@@ -12,25 +12,30 @@ use qvek::uuvec2;
 //  for x in 0..x_size {
 // Currently, Rust cannot optimize the order automatically. TODO: MIR-OPT coherence transform
 
-#[derive(Clone)]
 pub struct DArray2D<T> {
     pub data: Box<[T]>,
     pub x_size: usize,
     pub y_size: usize,
 }
 
-impl<T: Clone> DArray2D<T> {
-    pub fn copy_to(&self, other: &mut Self) {
-        if self.x_size != other.x_size || self.y_size != other.y_size {
-            // Dimensions mismatch: we must reallocate
-            *other = self.clone();
+impl<T: Clone> Clone for DArray2D<T> {
+    fn clone(&self) -> Self {
+        Self {
+            data: self.data.clone(),
+            x_size: self.x_size,
+            y_size: self.y_size,
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        if self.x_size != source.x_size || self.y_size != source.y_size {
+            // Dimensions mismatch: fallback to standard clone.
+            // This replaces the whole Box, causing a new allocation.
+            *self = source.clone();
         } else {
-            // Dimensions match: reuse the boxed slice memory
-            // slice::clone_from_slice only works if T: Copy.
-            // For T: Clone, we use a loop or zip to reuse existing elements.
-            for (src, dst) in self.data.iter().zip(other.data.iter_mut()) {
-                dst.clone_from(src);
-            }
+            // Dimensions match: Reuse the Boxed slice's memory.
+            // This calls clone_from on each element internally.
+            self.data.clone_from(&source.data);
         }
     }
 }
@@ -106,7 +111,7 @@ impl<T: Clone> DArray2D<T> {
     }
 
     pub fn new_filled(x_size: usize, y_size: usize, value: T) -> Self {
-        // woth keeping in release
+        // worth keeping in release
         assert!(
             x_size > 0 && y_size > 0,
             "Dimensions must be greater than zero"
@@ -128,11 +133,23 @@ impl<T: Clone> DArray2D<T> {
     }
 
     pub fn get(&self, x: usize, y: usize) -> &T {
-        &self.data[self.index_internal(x, y)]
+        let index = self.index_internal(x, y);
+        &self.data[index]
+    }
+    pub fn get_unchecked(&self, x: usize, y: usize) -> &T {
+        let index = self.index_internal(x, y);
+        unsafe { &self.data.get_unchecked(index) }
+        // unsafe { &mut self.data[index] }
     }
 
     pub fn get_mut(&mut self, x: usize, y: usize) -> &mut T {
-        &mut self.data[self.index_internal(x, y)]
+        let index = self.index_internal(x, y);
+        &mut self.data[index]
+    }
+    pub fn get_unchecked_mut(&mut self, x: usize, y: usize) -> &mut T {
+        let index = self.index_internal(x, y);
+        unsafe { self.data.get_unchecked_mut(index) }
+        // unsafe { &mut self.data[index] }
     }
 }
 
@@ -150,6 +167,16 @@ impl<T: Clone> Index<(i8, i8)> for DArray2D<T> {
     type Output = T;
 
     fn index(&self, index: (i8, i8)) -> &Self::Output {
+        let (x, y) = index; // unpack the tuple
+        let index_internal = self.index_internal(x as usize, y as usize);
+        &self.data[index_internal]
+    }
+}
+
+impl<T: Clone> Index<(u8, u8)> for DArray2D<T> {
+    type Output = T;
+
+    fn index(&self, index: (u8, u8)) -> &Self::Output {
         let (x, y) = index; // unpack the tuple
         let index_internal = self.index_internal(x as usize, y as usize);
         &self.data[index_internal]
@@ -203,6 +230,22 @@ impl<T: Clone> Index<qvek::types::uuvec2> for DArray2D<T> {
 }
 impl<T: Clone> IndexMut<qvek::types::uuvec2> for DArray2D<T> {
     fn index_mut(&mut self, index: qvek::types::uuvec2) -> &mut Self::Output {
+        let (x, y) = (index.x, index.y); // unpack the tuple
+        let index_internal = self.index_internal(x as usize, y as usize);
+        &mut self.data[index_internal]
+    }
+}
+impl<T: Clone> Index<qvek::types::u8vec2> for DArray2D<T> {
+    type Output = T;
+
+    fn index(&self, index: qvek::types::u8vec2) -> &Self::Output {
+        let (x, y) = (index.x, index.y); // unpack the tuple
+        let index_internal = self.index_internal(x as usize, y as usize);
+        &self.data[index_internal]
+    }
+}
+impl<T: Clone> IndexMut<qvek::types::u8vec2> for DArray2D<T> {
+    fn index_mut(&mut self, index: qvek::types::u8vec2) -> &mut Self::Output {
         let (x, y) = (index.x, index.y); // unpack the tuple
         let index_internal = self.index_internal(x as usize, y as usize);
         &mut self.data[index_internal]
