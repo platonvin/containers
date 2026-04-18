@@ -104,9 +104,7 @@ impl<T> DArray2D<T> {
 impl<T: Clone> DArray2D<T> {
     /// Creates a new 2D array with given dimensions, initialized with `Default` values.
     pub fn new(x_size: usize, y_size: usize) -> Self
-    where
-        T: Default + Clone,
-    {
+    where T: Default + Clone {
         Self::new_filled(x_size, y_size, T::default())
     }
 
@@ -260,9 +258,8 @@ impl<T: Clone> IndexMut<(usize, usize)> for DArray2D<T> {
     }
 }
 
-impl<T: Default + Clone> Debug for DArray2D<T>
-where
-    T: Debug,
+impl<T: Clone> Debug for DArray2D<T>
+where T: Debug
 {
     // a lot more readable
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

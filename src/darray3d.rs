@@ -1,7 +1,7 @@
 #![allow(unused_imports)]
 use qvek::vek::Vec3;
 
-use crate::{Array3D, array3d::RuntimeDims};
+use crate::{array3d::RuntimeDims, Array3D};
 use std::fmt::{self, Debug};
 use std::ops::{Index, IndexMut};
 

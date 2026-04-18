@@ -77,9 +77,7 @@ impl Multiprocessor {
     /// NOTE: `func: F` must identify itself using the thread id
     /// (which means that work division is on your side)
     pub fn dispatch<F>(&self, dispatch_size: usize, func: F)
-    where
-        F: Fn(usize) + Send + Sync + 'static,
-    {
+    where F: Fn(usize) + Send + Sync + 'static {
         while self.threads_active.load(Ordering::Relaxed) != 0 {}
 
         {

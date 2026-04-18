@@ -13,8 +13,7 @@ pub struct Array3DView<'a, T, U, D: Dim3> {
 }
 
 impl<'a, T, U, D: Dim3> Array3DView<'a, T, U, D>
-where
-    T: Into<U> + Clone,
+where T: Into<U> + Clone
 {
     pub fn get(&self, index: impl ToUsize3) -> U {
         let (x, y, z) = index.to_usize3();
@@ -44,17 +43,13 @@ pub struct Array3DViewMut<'a, T, U, D: Dim3> {
 
 impl<'a, T, U, D: Dim3> Array3DViewMut<'a, T, U, D> {
     pub fn set(&mut self, index: impl ToUsize3, value: U)
-    where
-        T: From<U>,
-    {
+    where T: From<U> {
         let (x, y, z) = index.to_usize3();
         self.array.set(x, y, z, T::from(value));
     }
 
     pub fn get(&self, index: impl ToUsize3) -> U
-    where
-        T: Into<U> + Clone,
-    {
+    where T: Into<U> + Clone {
         let (x, y, z) = index.to_usize3();
         self.array.get(x, y, z).clone().into()
     }
