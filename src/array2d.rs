@@ -1,5 +1,5 @@
 use std::{
-    fmt::{self, Debug},
+    // fmt::{self, Debug},
     iter::IntoIterator,
     ops::{Index, IndexMut},
     slice::{Iter, IterMut},
@@ -73,28 +73,18 @@ impl<T> DArray2D<T> {
     }
 
     /// Returns the dimensions of the array.
-    pub fn dimensions(&self) -> (usize, usize) {
-        (self.x_size, self.y_size)
-    }
+    pub fn dimensions(&self) -> (usize, usize) { (self.x_size, self.y_size) }
 
     /// Returns the dimensions of the array.
-    pub fn size(&self) -> uuvec2 {
-        uuvec2::new(self.x_size, self.y_size)
-    }
+    pub fn size(&self) -> uuvec2 { uuvec2::new(self.x_size, self.y_size) }
 
     /// Returns an iterator over the array.
-    pub fn iter(&self) -> Iter<'_, T> {
-        self.data.iter()
-    }
+    pub fn iter(&self) -> Iter<'_, T> { self.data.iter() }
 
     /// Returns a mutable iterator over the array.
-    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
-        self.data.iter_mut()
-    }
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.data.iter_mut() }
 
-    pub fn get_ref(&self, x: usize, y: usize) -> &T {
-        &self.data[self.index_internal(x, y)]
-    }
+    pub fn get_ref(&self, x: usize, y: usize) -> &T { &self.data[self.index_internal(x, y)] }
     pub fn set(&mut self, x: usize, y: usize, value: T) {
         let idx = self.index_internal(x, y);
         self.data[idx] = value;
@@ -122,13 +112,9 @@ impl<T: Clone> DArray2D<T> {
         }
     }
 
-    pub fn fill(&mut self, value: T) {
-        self.data.fill(value);
-    }
+    pub fn fill(&mut self, value: T) { self.data.fill(value); }
 
-    pub fn copy_data_from(&mut self, other: &DArray2D<T>) {
-        self.data = other.data.clone();
-    }
+    pub fn copy_data_from(&mut self, other: &DArray2D<T>) { self.data = other.data.clone(); }
 
     pub fn get(&self, x: usize, y: usize) -> &T {
         let index = self.index_internal(x, y);
@@ -258,49 +244,43 @@ impl<T: Clone> IndexMut<(usize, usize)> for DArray2D<T> {
     }
 }
 
-impl<T: Clone> Debug for DArray2D<T>
-where T: Debug
-{
-    // a lot more readable
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let (x_size, y_size) = self.dimensions();
-        writeln!(f, "Array2D [{} x {}]:", x_size, y_size)?;
-        for y in 0..y_size {
-            write!(f, "[ ")?;
-            for x in 0..x_size {
-                write!(f, "{:?} ", self[(x, y)])?;
-            }
-            writeln!(f, "]")?;
-        }
-        Ok(())
-    }
-}
+// impl<T: Clone> Debug for DArray2D<T>
+// where T: Debug
+// {
+//     // a lot more readable
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//         let (x_size, y_size) = self.dimensions();
+//         writeln!(f, "Array2D [{} x {}]:", x_size, y_size)?;
+//         for y in 0..y_size {
+//             write!(f, "[ ")?;
+//             for x in 0..x_size {
+//                 write!(f, "{:?} ", self[(x, y)])?;
+//             }
+//             writeln!(f, "]")?;
+//         }
+//         Ok(())
+//     }
+// }
 
 impl<T: Clone> IntoIterator for DArray2D<T> {
     type IntoIter = std::vec::IntoIter<T>;
     type Item = T;
 
-    fn into_iter(self) -> Self::IntoIter {
-        self.data.into_vec().into_iter()
-    }
+    fn into_iter(self) -> Self::IntoIter { self.data.into_vec().into_iter() }
 }
 
 impl<'a, T: Clone> IntoIterator for &'a DArray2D<T> {
     type IntoIter = Iter<'a, T>;
     type Item = &'a T;
 
-    fn into_iter(self) -> Self::IntoIter {
-        self.iter()
-    }
+    fn into_iter(self) -> Self::IntoIter { self.iter() }
 }
 
 impl<'a, T: Clone> IntoIterator for &'a mut DArray2D<T> {
     type IntoIter = IterMut<'a, T>;
     type Item = &'a mut T;
 
-    fn into_iter(self) -> Self::IntoIter {
-        self.iter_mut()
-    }
+    fn into_iter(self) -> Self::IntoIter { self.iter_mut() }
 }
 
 #[cfg(test)]

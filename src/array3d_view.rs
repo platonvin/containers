@@ -22,9 +22,7 @@ where T: Into<U> + Clone
 }
 
 impl<'a, T, U, D: Dim3> Array3DView<'a, T, U, D> {
-    pub fn dimensions(&self) -> Vec3<usize> {
-        self.array.dimensions()
-    }
+    pub fn dimensions(&self) -> Vec3<usize> { self.array.dimensions() }
 }
 
 impl<'a, T, U, D: Dim3, I: ToUsize3> Index<I> for Array3DView<'a, T, U, D> {
@@ -54,15 +52,11 @@ impl<'a, T, U, D: Dim3> Array3DViewMut<'a, T, U, D> {
         self.array.get(x, y, z).clone().into()
     }
 
-    pub fn dimensions(&self) -> Vec3<usize> {
-        self.array.dimensions()
-    }
+    pub fn dimensions(&self) -> Vec3<usize> { self.array.dimensions() }
 }
 
 impl<'a, T: Clone, U, D: Dim3> Array3DViewMut<'a, T, U, D> {
-    pub fn fill(&mut self, value: T) {
-        self.array.data.fill(value);
-    }
+    pub fn fill(&mut self, value: T) { self.array.data.fill(value); }
 }
 
 impl<'a, T, U, D: Dim3, I: ToUsize3> Index<I> for Array3DViewMut<'a, T, U, D> {

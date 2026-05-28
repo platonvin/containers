@@ -40,9 +40,7 @@ impl<T> Arena<T> {
         }
     }
 
-    pub fn get(&self, index: usize) -> Option<&T> {
-        self.storage.get(index)?.as_ref()
-    }
+    pub fn get(&self, index: usize) -> Option<&T> { self.storage.get(index)?.as_ref() }
 
     pub fn get_mut(&mut self, index: usize) -> Option<&mut T> {
         self.storage.get_mut(index)?.as_mut()
@@ -78,9 +76,7 @@ impl<T> Arena<T> {
         }
     }
 
-    pub fn total_size(&self) -> usize {
-        self.storage.len()
-    }
+    pub fn total_size(&self) -> usize { self.storage.len() }
 }
 
 /// Immutable iterator over (`index`, `&T`) of live entries in the arena.

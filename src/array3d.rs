@@ -40,9 +40,7 @@ pub trait Dim3: Copy + Clone + Default {
     }
 
     /// Total number of elements (x * y * z).
-    fn total_len(&self) -> usize {
-        self.x() * self.y() * self.z()
-    }
+    fn total_len(&self) -> usize { self.x() * self.y() * self.z() }
 }
 
 /// Runtime dimensions for non-const sizes.
@@ -50,15 +48,9 @@ pub trait Dim3: Copy + Clone + Default {
 pub type RuntimeDims = qvek::vek::Vec3<usize>;
 
 impl Dim3 for RuntimeDims {
-    fn x(&self) -> usize {
-        self.x
-    }
-    fn y(&self) -> usize {
-        self.y
-    }
-    fn z(&self) -> usize {
-        self.z
-    }
+    fn x(&self) -> usize { self.x }
+    fn y(&self) -> usize { self.y }
+    fn z(&self) -> usize { self.z }
 }
 
 // impl
@@ -68,15 +60,9 @@ impl Dim3 for RuntimeDims {
 pub struct ConstDims<const X: usize, const Y: usize, const Z: usize>;
 
 impl<const X: usize, const Y: usize, const Z: usize> Dim3 for ConstDims<X, Y, Z> {
-    fn x(&self) -> usize {
-        X
-    }
-    fn y(&self) -> usize {
-        Y
-    }
-    fn z(&self) -> usize {
-        Z
-    }
+    fn x(&self) -> usize { X }
+    fn y(&self) -> usize { Y }
+    fn z(&self) -> usize { Z }
 }
 
 /// Generic 3D array, parameterized by a Dim3, which allows runtime flexibility or template perfomance.
@@ -100,9 +86,7 @@ impl<T, D: Dim3> Array3D<T, D> {
     }
 
     /// Returns the dimensions as a tuple.
-    pub fn dimensions(&self) -> Vec3<usize> {
-        self.dims.xyz()
-    }
+    pub fn dimensions(&self) -> Vec3<usize> { self.dims.xyz() }
 
     /// Shared reference at (x, y, z).
     pub fn get(&self, x: usize, y: usize, z: usize) -> &T {
@@ -121,14 +105,10 @@ impl<T, D: Dim3> Array3D<T, D> {
     }
 
     /// Immutable iterator over all elements.
-    pub fn iter(&self) -> Iter<'_, T> {
-        self.data.iter()
-    }
+    pub fn iter(&self) -> Iter<'_, T> { self.data.iter() }
 
     /// Mutable iterator over all elements.
-    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
-        self.data.iter_mut()
-    }
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.data.iter_mut() }
 
     /// Unchecked shared reference (no bounds checks).
     /// # Safety
@@ -161,9 +141,7 @@ impl<T: Clone, D: Dim3> Array3D<T, D> {
     }
 
     /// Fills every element with `value`.
-    pub fn fill(&mut self, value: T) {
-        self.data.fill(value);
-    }
+    pub fn fill(&mut self, value: T) { self.data.fill(value); }
 
     /// Copies data from another array of same dims.
     pub fn copy_data_from(&mut self, other: &Self) {
@@ -172,16 +150,12 @@ impl<T: Clone, D: Dim3> Array3D<T, D> {
     }
 
     /// Returns a cloned copy of the element at (x, y, z).
-    pub fn get_cloned(&self, x: usize, y: usize, z: usize) -> T {
-        self.get(x, y, z).clone()
-    }
+    pub fn get_cloned(&self, x: usize, y: usize, z: usize) -> T { self.get(x, y, z).clone() }
 }
 
 impl<T: Clone + Default, D: Dim3> Array3D<T, D> {
     /// Creates array filled with `T::default()`.
-    pub fn new_default(dims: D) -> Self {
-        Self::new_filled(dims, T::default())
-    }
+    pub fn new_default(dims: D) -> Self { Self::new_filled(dims, T::default()) }
 }
 
 impl<T, D: Dim3> Array3D<T, D> {

@@ -84,9 +84,7 @@ impl<T: Default> Ring<T> {
 
 impl<T> Ring<T> {
     /// Returns the current (to index) element in the Ring.
-    pub fn current(&self) -> &T {
-        &self.data[self.index]
-    }
+    pub fn current(&self) -> &T { &self.data[self.index] }
     /// Returns the previous (to index, wrapping around len) element in the Ring.
     pub fn previous(&self) -> &T {
         let index = self.index + self.data.len() - 1;
@@ -101,9 +99,7 @@ impl<T> Ring<T> {
     }
 
     /// Mutably access the current element in the Ring.
-    pub fn current_mut(&mut self) -> &mut T {
-        &mut self.data[self.index]
-    }
+    pub fn current_mut(&mut self) -> &mut T { &mut self.data[self.index] }
     /// Mutably access the previous (to index, wrapping around len) element in the Ring.
     pub fn previous_mut(&self) -> &T {
         let index = self.index + self.data.len() - 1;
@@ -118,9 +114,7 @@ impl<T> Ring<T> {
     }
 
     /// Moves to the next element in the Ring (circularly).
-    pub fn move_next(&mut self) {
-        self.index = (self.index + 1) % self.data.len();
-    }
+    pub fn move_next(&mut self) { self.index = (self.index + 1) % self.data.len(); }
 
     /// Moves to the previous element in the Ring (circularly).
     pub fn move_previous(&mut self) {
@@ -132,9 +126,7 @@ impl<T> Ring<T> {
     }
 
     /// Access an element by absolute index (circularly).
-    pub fn get(&self, idx: usize) -> &T {
-        &self.data[idx % self.data.len()]
-    }
+    pub fn get(&self, idx: usize) -> &T { &self.data[idx % self.data.len()] }
 
     /// Mutably access an element by absolute index (circularly).
     pub fn get_mut(&mut self, idx: usize) -> &mut T {
@@ -143,27 +135,17 @@ impl<T> Ring<T> {
     }
 
     /// Resets the index to zero.
-    pub fn reset_index(&mut self) {
-        self.index = 0;
-    }
+    pub fn reset_index(&mut self) { self.index = 0; }
 
     /// Returns the length of the Ring.
-    pub fn len(&self) -> usize {
-        self.data.len()
-    }
+    pub fn len(&self) -> usize { self.data.len() }
 
     /// Checks if the Ring is empty.
-    pub fn is_empty(&self) -> bool {
-        self.data.is_empty()
-    }
+    pub fn is_empty(&self) -> bool { self.data.is_empty() }
 
-    pub fn as_slice(&self) -> &[T] {
-        &self.data
-    }
+    pub fn as_slice(&self) -> &[T] { &self.data }
 
-    pub fn as_mut_slice(&mut self) -> &mut [T] {
-        &mut self.data
-    }
+    pub fn as_mut_slice(&mut self) -> &mut [T] { &mut self.data }
 
     pub fn iter(&'_ self) -> RingIterator<'_, T> {
         RingIterator {
@@ -172,9 +154,7 @@ impl<T> Ring<T> {
         }
     }
 
-    pub fn first(&self) -> &T {
-        &self.data[0]
-    }
+    pub fn first(&self) -> &T { &self.data[0] }
 }
 
 impl<T> Ring<T> {
@@ -213,16 +193,12 @@ impl<T> Ring<T> {
 impl<T> Index<usize> for Ring<T> {
     type Output = T;
 
-    fn index(&self, idx: usize) -> &Self::Output {
-        self.get(idx)
-    }
+    fn index(&self, idx: usize) -> &Self::Output { self.get(idx) }
 }
 
 /// Implement `IndexMut` for mutable access using square brackets.
 impl<T> IndexMut<usize> for Ring<T> {
-    fn index_mut(&mut self, idx: usize) -> &mut Self::Output {
-        self.get_mut(idx)
-    }
+    fn index_mut(&mut self, idx: usize) -> &mut Self::Output { self.get_mut(idx) }
 }
 
 /// Iterator for `Ring`.

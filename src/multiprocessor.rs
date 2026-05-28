@@ -1,7 +1,7 @@
 use std::{
     sync::{
-        atomic::{AtomicBool, AtomicI32, Ordering},
         Arc, Mutex,
+        atomic::{AtomicBool, AtomicI32, Ordering},
     },
     thread,
     thread::JoinHandle,
@@ -19,9 +19,7 @@ pub struct Multiprocessor {
 }
 
 impl Default for Multiprocessor {
-    fn default() -> Self {
-        Self::new()
-    }
+    fn default() -> Self { Self::new() }
 }
 
 impl Multiprocessor {
@@ -109,9 +107,7 @@ impl Multiprocessor {
     }
 
     /// Returns the number of threads in the pool
-    pub fn used_thread_count(&self) -> usize {
-        self.num_threads
-    }
+    pub fn used_thread_count(&self) -> usize { self.num_threads }
 
     /// Returns the dispatch size you should use for optimal perfomance
     pub fn optimal_dispatch_size(&self) -> usize {
@@ -132,7 +128,7 @@ impl Drop for Multiprocessor {
 #[cfg(test)]
 mod tests {
     use std::{
-        sync::{atomic::AtomicUsize, Arc, Mutex},
+        sync::{Arc, Mutex, atomic::AtomicUsize},
         time::Duration,
     };
 
